@@ -197,15 +197,35 @@ class FindInterface(Interface):
                                 'введите номера полей для поиска (через пробел): '][is_ru])
             try:
                 query: list = list(map(int, query.split()))
+                if len(query) == 0:
+                    print(['enter something', 'напечатай что-нибудь'][is_ru])
+                    continue
                 for number in query:
-                    if number in range(1, len(test_guide.notes[query]) + 1):
+                    if number in range(1, len(test_guide.notes[1]) + 1):
                         continue
                     else:
-                        print(['no field N', 'нет поля №'][is_ru], {number})
+                        print(['no field N', 'нет поля №'][is_ru], number)
                         break
+                else:
+                    self.search_query(query, fields_list)
+                    break
             except ValueError:
                 print(['enter the numbers by space',
                        'введите числа через пробел'][is_ru])
+
+    def search_query(self, query: list, fields_list: list) -> None:
+        search_query = input(['enter find query: ', 'что ищем?: '][is_ru]).lower()
+        answer = {}
+        for i in query:
+            for n, j in test_guide.notes.items():
+                if search_query in j[fields_list[i - 1]].lower():
+                    answer[n] = j
+
+        if len(answer) > 0:
+            for i in sorted(answer):
+                print(f'{i}.', *answer[i].values())
+        else:
+            print(['no such records', 'нет подходящих записей'][is_ru])
 
 
 test_guide: Guide = Guide()
