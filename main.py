@@ -3,8 +3,9 @@ from guide import Guide
 
 is_ru: bool = False
 
+
 class Interface:
-    
+
     def __init__(self) -> None:
         self.lang_choise()
         self = MainInterface()
@@ -12,11 +13,11 @@ class Interface:
     def lang_choise(self) -> None:
         global is_ru
         while True:
-            choose: str = input('choose language/выберите язык(eng/ru):').lower()
-            if choose in ['eng', 'анг']:
+            choose: str = input('choose language/выберите язык(en/ru):').lower()
+            if choose in ['en', 'ан']:
                 is_ru = False
                 break
-            elif choose in ['ru', 'рус']:
+            elif choose in ['ru', 'ру']:
                 is_ru = True
                 break
             else:
@@ -45,7 +46,7 @@ class MainInterface(Interface):
     def main_int(self) -> None:
         while True:
             print([f'Here is a guide. Number of records:',
-                   f'Перед вами справочник. Количество записей: '][is_ru], test_guide.length)
+                   f'Перед вами справочник. Количество записей:'][is_ru], test_guide.length)
             query: str = input([f'Enter command (help - commands list):',
                                 f'Введите команду(помощь - список команд): '][is_ru]).lower()
             self.query_process(query)
@@ -53,12 +54,15 @@ class MainInterface(Interface):
     def query_process(self, query):
         if query in ('read', 'читать'):
             self = ReadInterface()
+        elif query in ('add', 'добавить'):
+            self = AddInterface()
         else:
             super().query_process(query)
 
     def help(self) -> None:
         super().help()
-        print(*[['read - open guide\n'], ['читать - открыть справочник\n']][is_ru])
+        print(*[['read - open guide'], ['читать - открыть справочник']][is_ru])
+        print(*[['add - add note'], ['добавить - добавить запись']][is_ru])
 
 
 class ReadInterface(Interface):
@@ -82,7 +86,8 @@ class ReadInterface(Interface):
     def query_process(self, now_page, flag) -> Union[int, None]:
         while True:
             query: str = input([f'Enter command (n - next, b - previous, help - commands list): ',
-                                f'Введите команду(с - следующая, ч - предыдущая, помощь - список команд): '][is_ru]).lower()
+                                f'Введите команду(с - следующая, ч - предыдущая, помощь - список команд): '][
+                                   is_ru]).lower()
             if query in ['n', 'с']:
                 now_page += 1
                 break
@@ -101,6 +106,21 @@ class ReadInterface(Interface):
     def help(self) -> None:
         super().help()
         print(*[['back - main menu\n'], ['назад - главное меню\n']][is_ru])
+
+
+class AddInterface(Interface):
+    def __init__(self):
+        self.add_note()
+
+    def add_note(self):
+        notes_list = []
+        notes_list.append(input([f'Enter lastname: ', f'Введите фамилию: '][is_ru]))
+        notes_list.append(input([f'Enter name: ', f'Введите имя: '][is_ru]))
+        notes_list.append(input([f'Enter middlename: ', f'Введите отчество: '][is_ru]))
+        notes_list.append(input([f'Enter organization: ', f'Введите организацию: '][is_ru]))
+        notes_list.append(input([f'Enter work_number: ', f'Введите рабочий телефон: '][is_ru]))
+        notes_list.append(input([f'Enter privat_number: ', f'Введите личный телефон: '][is_ru]))
+        test_guide.add_note(notes_list)
 
 
 test_guide: Guide = Guide()

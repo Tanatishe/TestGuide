@@ -30,3 +30,19 @@ class Guide:
             },
         }
         self.length: int = len(self.notes)
+
+    def add_note(self, notes_list):
+        new_key: int = self.length + 1
+        self.notes[new_key] = {'lastname': notes_list[0],
+                               'name': notes_list[1],
+                               'middlename': notes_list[2],
+                               'organization': notes_list[3],
+                               'work_number': notes_list[4],
+                               'privat_number': notes_list[5]}
+        print(*self.notes.values(), sep='\n')
+        self.length: int = len(self.notes)
+        self.save_dict()
+
+    def save_dict(self):
+        pass
+
