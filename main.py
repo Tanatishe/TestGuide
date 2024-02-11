@@ -46,7 +46,7 @@ class MainInterface(Interface):
     def main_int(self) -> None:
         while True:
             print([f'Here is a guide. Number of records:',
-                   f'Перед вами справочник. Количество записей:'][is_ru], test_guide.length)
+                   f'Перед вами справочник. Количество записей:'][is_ru], len(test_guide.notes))
             query: str = input([f'Enter command (help - commands list):',
                                 f'Введите команду(помощь - список команд): '][is_ru]).lower()
             self.query_process(query)
@@ -56,13 +56,19 @@ class MainInterface(Interface):
             self = ReadInterface()
         elif query in ('add', 'добавить'):
             self = AddInterface()
+        elif query in ('edit', 'изменить'):
+            self = EditInterface()
+        elif query in ('find', 'поиск'):
+            self = FindInterface()
         else:
             super().query_process(query)
 
     def help(self) -> None:
         super().help()
-        print(*[['read - open guide'], ['читать - открыть справочник']][is_ru])
         print(*[['add - add note'], ['добавить - добавить запись']][is_ru])
+        print(*[['edit - edit note'], ['изменить - редактировать запись']][is_ru])
+        print(*[['read - open guide'], ['читать - открыть справочник']][is_ru])
+        print(*[['find - find data'], ['поиск - искать данные']][is_ru])
 
 
 class ReadInterface(Interface):
@@ -99,8 +105,8 @@ class ReadInterface(Interface):
                 break
             else:
                 super().query_process(query)
-        now_page: int = abs(now_page) % test_guide.length
-        now_page: int = test_guide.length if now_page == 0 else now_page
+        now_page: int = abs(now_page) % len(test_guide.notes)
+        now_page: int = len(test_guide.notes) if now_page == 0 else now_page
         return now_page, flag
 
     def help(self) -> None:
@@ -121,6 +127,85 @@ class AddInterface(Interface):
         notes_list.append(input([f'Enter work_number: ', f'Введите рабочий телефон: '][is_ru]))
         notes_list.append(input([f'Enter privat_number: ', f'Введите личный телефон: '][is_ru]))
         test_guide.add_note(notes_list)
+
+
+class EditInterface(Interface):
+
+    def __init__(self):
+        self.query_process()
+
+    def query_process(self) -> None:
+        while True:
+            query: str = input(['enter the number of the entry to be changed: ',
+                                'введите номер изменяемой записи: '][is_ru])
+            try:
+                if int(query) in test_guide.notes:
+                    print([f'the entry N {query} will be changed',
+                           f'будет изменена запись № {query}'][is_ru])
+                    break
+                else:
+                    print([f'no entry N {query}',
+                           f'нет записи № {query}'][is_ru])
+            except ValueError:
+                print(['enter the number',
+                       'ну, число же надо'][is_ru])
+
+        self.edit_note(int(query))
+
+    def edit_note(self, query: int) -> None:
+        counter = 0
+        for field, val in test_guide.notes[query].items():
+            counter += 1
+            print(str(counter) + '.', field, val)
+
+        fields_list = ['lastname', 'name', 'middlename', 'organization', 'work_number', 'privat_number']
+
+        while True:
+            sub_query: str = input(['enter the number of the field to be changed: ',
+                                    'введите номер изменяемого поля: '][is_ru])
+            try:
+                if int(sub_query) in range(1, len(test_guide.notes[query]) + 1):
+                    print([f'the field {fields_list[int(sub_query) - 1]} will be changed',
+                           f'будет изменено поле {fields_list[int(sub_query) - 1]}'][is_ru])
+                    new_val: str = input(['enter new value: ',
+                                          'введите новое значение: '][is_ru])
+                    test_guide.edit_note(int(query), int(sub_query) - 1, fields_list, new_val)
+                    print(['changed', 'изменено'][is_ru])
+                    break
+                else:
+                    print([f'no field {sub_query}',
+                           f'нет поля № {sub_query}'][is_ru])
+            except ValueError:
+                print(['enter the number',
+                       'ну, число же надо'][is_ru])
+
+
+class FindInterface(Interface):
+    def __init__(self):
+        self.query_process()
+
+    def query_process(self) -> None:
+        counter = 0
+        for field in test_guide.notes[1]:
+            counter += 1
+            print(str(counter) + '.', field)
+
+        fields_list = ['lastname', 'name', 'middlename', 'organization', 'work_number', 'privat_number']
+
+        while True:
+            query: str = input(['enter the numbers of the fields for find(by space): ',
+                                'введите номера полей для поиска (через пробел): '][is_ru])
+            try:
+                query: list = list(map(int, query.split()))
+                for number in query:
+                    if number in range(1, len(test_guide.notes[query]) + 1):
+                        continue
+                    else:
+                        print(['no field N', 'нет поля №'][is_ru], {number})
+                        break
+            except ValueError:
+                print(['enter the numbers by space',
+                       'введите числа через пробел'][is_ru])
 
 
 test_guide: Guide = Guide()
