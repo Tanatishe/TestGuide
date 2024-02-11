@@ -47,6 +47,8 @@ class Guide:
             with open('text.txt', 'r') as file:
                 for line in file.readlines():
                     contact = line[1:].strip().split(', ')
+                    while len(contact) < 7:
+                        contact.append('')
                     contacts[int(line[0])] = {
                         'lastname': contact[1],
                         'name': contact[2],
