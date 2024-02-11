@@ -1,7 +1,9 @@
+"""Здесь работаем со справочником."""
 import os
 
 
 class Guide:
+    """Собственно справочник."""
     notes: dict = {}
     test_dict: dict = {
         1: {
@@ -32,11 +34,14 @@ class Guide:
 
         },
     }
+    """Эта штука защищает нас от ошибки, если нет текстового файла"""
 
-    def __init__(self):
+    def __init__(self) -> None:
+        """Запускаем словарь."""
         self.notes: dict = self.open_dict()
 
-    def open_dict(self):
+    def open_dict(self) -> dict:
+        """Считываем информацию из текстового файла, а если его нет - копируем тестовый словарь"""
         contacts = {}
         if os.path.isfile('text.txt'):
             with open('text.txt', 'r') as file:
@@ -55,7 +60,8 @@ class Guide:
             contacts = self.test_dict
         return contacts
 
-    def add_note(self, notes_list):
+    def add_note(self, notes_list: list) -> None:
+        """Добавляем запись. При формировании ключа исходим из сплошной нумерации."""
         new_key: int = len(self.notes) + 1
         self.notes[new_key] = {'lastname': notes_list[0],
                                'name': notes_list[1],
@@ -65,7 +71,8 @@ class Guide:
                                'privat_number': notes_list[5]}
         self.save_dict()
 
-    def save_dict(self):
+    def save_dict(self) -> None:
+        """Перезаписываем текстовый файл."""
         with open('text.txt', 'w') as file:
             for number, note in self.notes.items():
                 line = ', '.join(note.values())
@@ -73,5 +80,6 @@ class Guide:
                 file.write(line + '\n')
 
     def edit_note(self, query: int, sub_query: int, fields_list: list, new_val: str) -> None:
+        """Меняем запись."""
         self.notes[query][fields_list[sub_query]] = new_val
         self.save_dict()
