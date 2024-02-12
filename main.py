@@ -32,7 +32,7 @@ is_ru: bool = False
 
 
 class Interface:
-    """Папа всех интерфейсов"""
+    """Папа всех интерфейсов."""
 
     def __init__(self) -> None:
         """"
@@ -84,14 +84,14 @@ class Interface:
 
 
 class MainInterface(Interface):
-    """Основной класс в котором крутим приложение"""
+    """Основной класс в котором крутим приложение."""
 
     def __init__(self):
-        """Запускаем крутилку при инициализации"""
+        """Запускаем крутилку при инициализации."""
         self.main_int()
 
     def main_int(self) -> None:
-        """Крутилка. Когда спец интерфейсы отрабатывают - возвращаемся сюда"""
+        """Крутилка. Когда спец интерфейсы отрабатывают - возвращаемся сюда."""
         while True:
             print([f'Here is a guide. Number of records:',
                    f'Перед вами справочник. Количество записей:'][is_ru], len(test_guide.notes))
@@ -113,7 +113,7 @@ class MainInterface(Interface):
             super().query_process(query)
 
     def help(self) -> None:
-        """"самая большая хелпушка в программе"""
+        """"Самая большая хелпушка в программе."""
         super().help()
         print(*[['add - add note'], ['добавить - добавить запись']][is_ru])
         print(*[['edit - edit note'], ['изменить - редактировать запись']][is_ru])
@@ -171,13 +171,13 @@ class ReadInterface(Interface):
         return now_page, flag
 
     def help(self) -> None:
-        "хэлпушка"
+        "Хэлпушка."
         super().help()
         print(*[['back - main menu\n'], ['назад - главное меню\n']][is_ru])
 
 
 class AddInterface(Interface):
-    """Интерфейс добавления записей"""
+    """Интерфейс добавления записей."""
 
     def __init__(self):
         """Как обычно"""
@@ -269,7 +269,7 @@ class FindInterface(Interface):
     def query_process(self) -> None:
         """
         Просим ввести номера полей для поиска, перехватываем исключения. Отдельно ловим пустой ввод, так как он
-        пролезает через Трай.
+        пролезает через трай.
         """
         counter = 0
         for field in test_guide.notes[1]:
@@ -301,7 +301,7 @@ class FindInterface(Interface):
 
     def search_query(self, query: list, fields_list: list) -> None:
         """
-        Формируем поисковый запрос без учета регистра и вместе с перечнем полей для поиска засылаем методу словаря.
+        Ищем по заданным полям. Выводим построчно.
         """
         search_query = input(['enter find query: ', 'что ищем?: '][is_ru]).lower()
         answer = {}
@@ -318,7 +318,7 @@ class FindInterface(Interface):
 
 
 test_guide: Guide = Guide()
-"""Инициализируем словарь"""
+"""Инициализируем словарь."""
 test = Interface()
-"""Зпускаем процесс"""
+"""Зпускаем процесс."""
 
